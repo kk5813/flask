@@ -1,0 +1,6 @@
+*.pth
+*.pt
+/.idea
+/App/weights/
+/App/img/
+*.log
