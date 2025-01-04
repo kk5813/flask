@@ -9,7 +9,6 @@ from PIL import Image
 import io
 from App.API import Result, make_response, cache, logging, auth, result_data
 from App.predicts.YyPredictPss import YyPredictPss
-from App.util.pdfToJPG import process_pdf
 
 
 def make_cache_key():

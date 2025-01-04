@@ -1,1 +1,1 @@
-docker build -t flask .
+docker build -t flask:1.0 .

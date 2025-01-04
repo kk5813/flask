@@ -5,6 +5,8 @@ import uuid
 import torch
 from PIL import Image, ImageDraw
 from torchvision import transforms
+
+from App.API import save_path
 from App.model.quality_model import efficientnetv2_l as create_model
 from ultralytics import YOLO
 
@@ -15,8 +17,8 @@ class ZhmPredict3:
 
     @staticmethod
     def lesion_detection(img):
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        save_path = os.path.join("/", "zcc", "DownLoad", "project", "AI")
+        # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        device = torch.device("cpu")
         img = Image.open(img)  # Open the image
         draw = ImageDraw.Draw(img)  # Create drawing context
         # Load the YOLO model
@@ -41,7 +43,7 @@ class ZhmPredict3:
 
         if not os.path.exists(save_path):
             os.makedirs(save_path)
-        path = save_path + "\\" + str(uuid.uuid1()) + ".jpg"
+        path = save_path + str(uuid.uuid1()) + ".jpg"
         img.save(path)
 
         return path

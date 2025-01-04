@@ -6,6 +6,8 @@ from PIL import Image, ImageDraw
 from torchvision import transforms
 from ultralytics import YOLO
 import uuid
+
+from App.API import save_path
 from App.model.quality_model import efficientnetv2_l as create_model
 
 
@@ -15,7 +17,6 @@ class ZhmPredict2:
 
     @staticmethod
     def quadrant_division(img):
-        save_path = os.path.join("/", "zcc", "DownLoad", "project", "AI")
         img = Image.open(img)
         width, height = img.size
         # read class_indict
@@ -56,23 +57,22 @@ class ZhmPredict2:
                 # quadrant2.show(title="Quadrant 2 (Left-Top)")
                 # quadrant3.show(title="Quadrant 3 (Left-Bottom)")
                 # quadrant4.show(title="Quadrant 4 (Right-Bottom)")
-
                 if not os.path.exists(save_path):
                     os.makedirs(save_path)
-                path = save_path + "\\" + str(uuid.uuid1()) + ".jpg"
+                path = save_path + str(uuid.uuid1()) + ".jpg"
 
                 quadrant1.save(path)
                 url = path
 
-                path = save_path + "\\" + str(uuid.uuid1()) + ".jpg"
+                path = save_path + str(uuid.uuid1()) + ".jpg"
                 quadrant2.save(path)
                 url += "," + path
 
-                path = save_path + "\\" + str(uuid.uuid1()) + ".jpg"
+                path = save_path + str(uuid.uuid1()) + ".jpg"
                 quadrant3.save(path)
                 url += "," + path
 
-                path = save_path + "\\" + str(uuid.uuid1()) + ".jpg"
+                path = save_path + str(uuid.uuid1()) + ".jpg"
                 quadrant4.save(path)
                 url += "," + path
 

@@ -9,6 +9,8 @@ import uuid
 import cv2
 import numpy as np
 from PIL import Image
+
+from App.API import save_path
 from App.model.yy_unet import Unet
 
 
@@ -21,7 +23,6 @@ class YyPredictSeg:
         # -------------------------------------------------------------------------  #
         #   如果想要修改对应种类的颜色，到__init__函数里修改self.colors即可
         # -------------------------------------------------------------------------#
-        save_path = os.path.join("/", "zcc", "DownLoad", "project", "AI")
         count = False
         name_classes = ["background", "CRA", "JSH", "od"]
         unet = Unet()
@@ -29,7 +30,7 @@ class YyPredictSeg:
         r_image = unet.detect_image(image, count=count, name_classes=name_classes)
         if not os.path.exists(save_path):
             os.makedirs(save_path)
-        path = save_path + "\\" + str(uuid.uuid1()) + ".jpg"
+        path = save_path + str(uuid.uuid1()) + ".jpg"
         r_image.save(path)
 
         # r_image.show()

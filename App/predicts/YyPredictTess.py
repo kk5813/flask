@@ -13,7 +13,8 @@ class YyPredictTess:
 
     @staticmethod
     def predict_tess(img):
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        device = torch.device("cpu")
 
         data_transform = transforms.Compose(
             [transforms.Resize(256),

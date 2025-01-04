@@ -1,4 +1,6 @@
 # API 接口文件
+import os
+
 from flask_restful import fields
 import logging.config
 from App.extension import cache, auth
@@ -10,6 +12,7 @@ Result = {
     'msg': fields.String
 }
 
+save_path = os.path.join("/", "opt", "resources", "images/")
 
 # 返回数据
 def make_response(data, code, msg):
