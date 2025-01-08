@@ -48,9 +48,9 @@ class ZhmApi0(Resource):
 
         quality_cls = ZhmPredict0.abnormalDetect(image_path)
         if quality_cls >= 0.7:
-            predict = "正常眼底图像"
+            predict = "图像质量正常"
         else:
-            predict = "异常眼底图像"
+            predict = "图像质量异常"
         return make_response(result_data(predict, ""), 200, 'OK')
 
     """

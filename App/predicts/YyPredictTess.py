@@ -35,7 +35,9 @@ class YyPredictTess:
         img = torch.unsqueeze(img, dim=0)
 
         # read class_indict
-        json_path = r'../class_indices/yy_tess_class_indices.json'
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        json_path = os.path.join(script_dir, "../class_indices/yy_tess_class_indices.json")
+        json_path = os.path.abspath(json_path)
         assert os.path.exists(json_path), "file: '{}' dose not exist.".format(json_path)
 
         with open(json_path, "r") as f:
@@ -44,7 +46,9 @@ class YyPredictTess:
         # create model
         model = densenet121(num_classes=2).to(device)
         # load model weights
-        model_weight_path = r"../weights/yy_desnet_model-18.pth"
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        weights_path = os.path.join(script_dir, "../weights/yy_desnet_model-18.pth")
+        model_weight_path = os.path.abspath(weights_path)
         model.load_state_dict(torch.load(model_weight_path, map_location=device))
         model.eval()
         with torch.no_grad():

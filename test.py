@@ -1,25 +1,42 @@
-import os
-from PIL import Image
+import fitz  # PyMuPDF
 
-# 指定文件夹的路径
-folder_path = "/opt/resources/images"
+def extract_pdf_content(pdf_path):
+    # 打开PDF文件
+    doc = fitz.open(pdf_path)
 
-# 检查文件夹是否存在
-assert os.path.exists(folder_path), f"文件夹 {folder_path} 不存在！"
+    # 获取第一页
+    page = doc.load_page(0)
 
-# 输出文件夹中的所有文件名，并查找第一个 .png 或 .jpg 文件
-print(f"文件夹 {folder_path} 中的文件：")
-image_found = False
+    # 提取文本内容
+    text = page.get_text("text")
+    print("Text Content:")
+    print("Format: Text")
+    print(text)
+    print("="*50)
 
-for filename in os.listdir(folder_path):
-    file_path = os.path.join(folder_path, filename)
-    if os.path.isfile(file_path) and (filename.endswith('.png') or filename.endswith('.jpg')):
-        print(f"找到图片文件: {filename}")
-        # 读取图片
-        with Image.open(file_path) as img:
-            img.show()  # 显示图片
-        image_found = True
-        break  # 找到第一个文件后退出循环
+    # 提取矢量图形路径（包括曲线、直线等）
+    shapes = page.get_drawings()
+    print("Shape Content:")
+    print("Format: Vector Graphics (Path/Curve/Line)")
+    for shape in shapes:
+        for item in shape['items']:
+            if item[0] == 'curve':
+                print("Curve:", item[1])  # 曲线的坐标数据
+            elif item[0] == 'line':
+                print("Line:", item[1])  # 直线的坐标数据
+    print("="*50)
 
-if not image_found:
-    print("没有找到 .png 或 .jpg 文件。")
+    # 提取嵌入的图像
+    images = page.get_images(full=True)
+    print("Image Content:")
+    print("Format: Image (Embedded)")
+    for img in images:
+        xref = img[0]  # 图像的xref标识符
+        image = doc.extract_image(xref)
+        image_bytes = image["image"]
+        print(f"Image XREF: {xref}, Image Size: {len(image_bytes)} bytes")
+    print("="*50)
+
+# 使用函数提取内容并打印
+pdf_path = r"E:\python\flask_deploy\App\img\阿追-光学相干断层成像（OCT）.pdf"  # 请替换成你的PDF文件路径
+extract_pdf_content(pdf_path)

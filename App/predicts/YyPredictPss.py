@@ -37,7 +37,9 @@ class YyPredictPss:
 
         # read class_indict
         # json_path = r'E:\python\flask_deploy\App\class_indices\yy_pss_class_indices.json'
-        json_path = '../class_indices/yy_pss_class_indices.json'
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        json_path = os.path.join(script_dir, "../class_indices/yy_pss_class_indices.json")
+        json_path = os.path.abspath(json_path)
         assert os.path.exists(json_path), "file: '{}' dose not exist.".format(json_path)
 
         with open(json_path, "r") as f:
@@ -47,7 +49,9 @@ class YyPredictPss:
         model = create_regnet(model_name="RegNetY_400MF", num_classes=2).to(device)
         # load model weights
         # model_weight_path = r"E:\python\flask_deploy\App\weights\yy_regnet_model-27.pth"
-        model_weight_path = '../weights/yy_regnet_model-27.pth'
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        weights_path = os.path.join(script_dir, "../weights/yy_regnet_model-27.pth")
+        model_weight_path = os.path.abspath(weights_path)
         model.load_state_dict(torch.load(model_weight_path, map_location=device))
         model.eval()
         with torch.no_grad():

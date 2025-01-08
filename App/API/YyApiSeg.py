@@ -46,7 +46,7 @@ class YyApiSeg(Resource):
         image_path = args['imagePath']
 
         seg_img_path = YyPredictSeg.predict_segment(image_path)
-        return make_response(result_data("",seg_img_path), 200, 'OK')
+        return make_response(result_data("视盘和视杯分割结果", seg_img_path), 200, 'OK')
 
     """
         'form'：表单数据

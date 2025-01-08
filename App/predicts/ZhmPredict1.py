@@ -63,6 +63,10 @@ class ZhmPredict1:
         # res = "class: {}   prob: {:.3}".format(class_indict[str(predict_cla)],
         #                                              predict[predict_cla].numpy())
         res = class_indict[str(predict_cla)]
+        if res == "noPhase4":
+            res = "非四期"
+        elif res == "phase4":
+            res = "诊断为：四期"
         return res
 
 
