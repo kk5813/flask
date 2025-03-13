@@ -34,7 +34,7 @@ def render_pdf_page_as_image(pdf_path, output_folder, dpi=300):
         image_path = os.path.join(output_folder, f"page_{page_number + 1}.png")
         pix.save(image_path)
 
-        print(f"页面 {page_number + 1} 渲染完成：{image_path}，大小：{pix.width}x{pix.height}")
+        # print(f"页面 {page_number + 1} 渲染完成：{image_path}，大小：{pix.width}x{pix.height}")
 
     pdf_document.close()
 
@@ -86,7 +86,7 @@ def extract_and_crop_images(image_path, output_dir):
             output_image_path = os.path.join(output_dir, f'extracted_image_{i + 1}.png')
             cv2.imwrite(output_image_path, cropped_image)
             cropped_image_paths.append(output_image_path)
-            print(f'提取的图像已保存到 {output_image_path}')
+            # print(f'提取的图像已保存到 {output_image_path}')
 
     return cropped_image_paths
 

@@ -9,6 +9,7 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 import io
 from App.API import Result, make_response, cache, logging, auth, result_data
+from App.model.wjl_site_model import SitePredict
 from App.predicts.YyPredictPss import YyPredictPss
 from App.util.pdfToJPG import process_pdf
 
@@ -39,6 +40,7 @@ class site(Resource):
     # @auth.login_required
     # @cache.cached(timeout=60, key_prefix=make_cache_key)
     def post(self):
+        print("眼別识别开始")
         args = self.parser.parse_args()
         self.logger.debug(args)
         image_path = args['imagePath']
@@ -52,16 +54,21 @@ class site(Resource):
             # 遍历所有图像路径并进行预测
             result_datas = []
             for path in image_path:
-                result = SitePredict(path)  # 假设 SitePredict 返回 0 或 1
+                eye = SitePredict(path)  # 假设 SitePredict 返回 0 或 1
+                if eye == 0:
+                    result = "左眼"
+                else:
+                    result = "右眼"
                 if result in [0, 1]:
                     result_datas.append(result_data(result, path))
                     if len(result_datas) == 2:
                         break  # 如果找到结 果为 0 或 1，立即停止
             return make_response(result_datas, 200, 'OK')
         else:
-            result = SitePredict()
+            eye = SitePredict(image_path)  # 假设 SitePredict 返回 0 或 1
+            if eye == 0:
+                result = "左眼"
+            else:
+                result = "右眼"
             return make_response(result_data(result, image_path), 200, 'OK')
 
-
-def SitePredict(image_path):
-    return random.randint(0, 1)
