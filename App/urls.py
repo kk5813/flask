@@ -7,10 +7,15 @@ from .API.ZhmApi0 import ZhmApi0
 from .API.ZhmApi1 import ZhmApi1
 from .API.ZhmApi2 import ZhmApi2
 from .API.ZhmApi3 import ZhmApi3
+from .API.site import site
 from .extension import api
+
+# 眼别判断
+api.add_resource(site, '/api/site')
 
 # 异常图像检测算法
 api.add_resource(ZhmApi0, '/api/dr/quality')
+
 # 四期非四期诊断
 api.add_resource(ZhmApi1, '/api/dr/4orNo4Detect')
 # 基于视盘象限划分
