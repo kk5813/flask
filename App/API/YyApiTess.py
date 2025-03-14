@@ -26,21 +26,7 @@ class YyApiTess(Resource):
     # @auth.login_required
     # @cache.cached(timeout=60, key_prefix=make_cache_key)
     def post(self):
-        """
-        第一个模型：大致描述模型做什么的，模型代号
-        ---
-        parameters:
-          - in: body
-            name: image
-            type: files
-            required: true
-        responses:
-          200:
-            description: 成功
-            schema:
-                quality: 预测结果
-                msg: OK
-        """
+        print("豹纹状改变检测")
         args = self.parser.parse_args()
         self.logger.debug(args)
         image_path = args['imagePath']

@@ -41,7 +41,7 @@ class ZhmApi3(Resource):
                 quality: 预测结果
                 msg: OK
         """
-
+        print("病灶目标检测")
         args = self.parser.parse_args()
         self.logger.debug(args)
         image_path = args['imagePath']

@@ -7,11 +7,11 @@ from torchvision.models import resnet18
 def SitePredict(image_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # 加载模型
-    model = resnet18(pretrained=False)
+    model = resnet18(weights=None)
     # 修改最后一层全连接层（fc 层）以适应 2 分类任务
     model.fc = torch.nn.Linear(model.fc.in_features, 2)
-    weights = r"D:\wjl\pro\RVO\weight\lr\resnet18\0\lr-resnet18.pth"
-    weights_dict = torch.load(weights, map_location=device, weights_only=True)
+    weights = r"E:\python\flask_deploy\App\weights\wjl_resnet18.pth"
+    weights_dict = torch.load(weights, map_location=device)
     model.load_state_dict(weights_dict)  # 加载权重
     model.to(device)  # 将模型移动到 GPU
     # 设置为评估模式

@@ -51,18 +51,24 @@ class site(Resource):
         if image_path.lower().endswith('.pdf'):
             image_path = process_pdf(image_path, r'E:\python\flask_deploy\App\img\rendered',
                                      r'E:\python\flask_deploy\App\img\extracted', dpi=300)
+            print(image_path)
             # 遍历所有图像路径并进行预测
             result_datas = []
+            left_eye_found = False
+            right_eye_found = False
             for path in image_path:
-                eye = SitePredict(path)  # 假设 SitePredict 返回 0 或 1
-                if eye == 0:
-                    result = "左眼"
-                else:
-                    result = "右眼"
-                if result in [0, 1]:
-                    result_datas.append(result_data(result, path))
-                    if len(result_datas) == 2:
-                        break  # 如果找到结 果为 0 或 1，立即停止
+                eye = SitePredict(path)  # 假设 SitePredict 返回 0（左眼）或 1（右眼）
+
+                if eye == 0 and not left_eye_found:  # 找到左眼且尚未记录
+                    result_datas.append(result_data("左眼", path))
+                    left_eye_found = True
+                elif eye == 1 and not right_eye_found:  # 找到右眼且尚未记录
+                    result_datas.append(result_data("右眼", path))
+                    right_eye_found = True
+
+                # 如果左右眼都找到了，提前退出循环
+                if left_eye_found and right_eye_found:
+                    break
             return make_response(result_datas, 200, 'OK')
         else:
             eye = SitePredict(image_path)  # 假设 SitePredict 返回 0 或 1

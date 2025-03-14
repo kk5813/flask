@@ -25,7 +25,7 @@ class ZhmApi1(Resource):
     # @auth.login_required
     # @cache.cached(timeout=60, key_prefix=make_cache_key)
     def post(self):
-
+        print("四期非四期检测")
         args = self.parser.parse_args()
         self.logger.debug(args)
         image_path = args['imagePath']
