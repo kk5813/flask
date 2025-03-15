@@ -15,8 +15,8 @@ class ZhmPredict1:
 
     @staticmethod
     def phase4orNo4Detect(img_url):
-        # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        device = torch.device("cpu")
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        # device = torch.device("cpu")
         print(f"using {device} device.")
 
         num_classes = 2

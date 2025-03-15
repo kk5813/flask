@@ -1,3 +1,5 @@
+import os
+
 import torch
 from torchvision import transforms
 from PIL import Image
@@ -5,13 +7,14 @@ from torchvision.models import resnet18
 
 
 def SitePredict(image_path):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # 加载模型
     model = resnet18(weights=None)
     # 修改最后一层全连接层（fc 层）以适应 2 分类任务
     model.fc = torch.nn.Linear(model.fc.in_features, 2)
-    weights = r"E:\python\flask_deploy\App\weights\wjl_resnet18.pth"
-    weights_dict = torch.load(weights, map_location=device)
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    weight_path = os.path.join(script_dir, "../weights/wjl_resnet18.pth")
+    weights_dict = torch.load(weight_path, map_location=device)
     model.load_state_dict(weights_dict)  # 加载权重
     model.to(device)  # 将模型移动到 GPU
     # 设置为评估模式

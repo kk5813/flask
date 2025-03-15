@@ -1,6 +1,7 @@
 import os
 import json
 import uuid
+from datetime import datetime
 
 import torch
 from PIL import Image, ImageDraw
@@ -16,9 +17,9 @@ class ZhmPredict3:
         pass
 
     @staticmethod
-    def lesion_detection(img):
-        # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        device = torch.device("cpu")
+    def lesion_detection(img, visitNumber):
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        # device = torch.device("cpu")
         img = Image.open(img)  # Open the image
         draw = ImageDraw.Draw(img)  # Create drawing context
         # Load the YOLO model
@@ -40,15 +41,18 @@ class ZhmPredict3:
 
                 text = f"{class_name} {confidence:.2f}"
                 draw.text((x_min, y_min - 10), text, fill="red")
-
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
-        path = save_path + str(uuid.uuid1()) + ".jpg"
+        now = datetime.now()
+        image_save_path = os.path.join(save_path, "dr",
+                                       now.strftime('%Y'), now.strftime('%m')
+                                       , visitNumber)
+        if not os.path.exists(image_save_path):
+            os.makedirs(image_save_path)
+        path = image_save_path + "/" + str(uuid.uuid1()) + ".jpg"
         img.save(path)
 
         return path
 
 
 if __name__ == '__main__':
-    path = ZhmPredict3.lesion_detection(r"E:\python\flask_deploy\App\img\zhm\bingzao.jpg")
+    path = ZhmPredict3.lesion_detection(r"E:\python\flask_deploy\App\img\zhm\bingzao.jpg", "MZ20251222")
     print(path)

@@ -15,8 +15,7 @@ class YyPredictPss:
 
     @staticmethod
     def predict_pss(img):
-        # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        device = torch.device("cpu")
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         data_transform = transforms.Compose(
             [transforms.Resize(256),
@@ -25,7 +24,6 @@ class YyPredictPss:
              transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
         # load image
-        # img_path = r"D:\wjl\aier\quality_classification_show\yy\img\001958-20191029@150326-R1-S.jpg"
         img_path = img
         assert os.path.exists(img_path), "file: '{}' dose not exist.".format(img_path)
         img = Image.open(img_path)

@@ -1,14 +1,16 @@
 import hashlib
 import os
 import random
+import uuid
 
 from flask import json, jsonify, Response, request
+from datetime import datetime
 from flask_restful import Resource, fields, marshal_with, reqparse
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 from PIL import Image
 import io
-from App.API import Result, make_response, cache, logging, auth, result_data
+from App.API import Result, make_response, cache, logging, auth, result_data, save_path
 from App.model.wjl_site_model import SitePredict
 from App.predicts.YyPredictPss import YyPredictPss
 from App.util.pdfToJPG import process_pdf
@@ -32,7 +34,7 @@ class site(Resource):
         self.logger = logging.getLogger(__name__)
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('imagePath', type=str, required=True, help="Image file Path is required")
-
+        self.parser.add_argument('visitNumber', type=str, required=True, help="Visit Number is required")
 
     # 自定义缓存键函数，根据请求参数生成唯一的键
 
@@ -40,18 +42,26 @@ class site(Resource):
     # @auth.login_required
     # @cache.cached(timeout=60, key_prefix=make_cache_key)
     def post(self):
-        print("眼別识别开始")
+        print("眼别识别开始")
         args = self.parser.parse_args()
         self.logger.debug(args)
         image_path = args['imagePath']
+        visitNumber = args['visitNumber']
+        if visitNumber == "" or visitNumber is None:
+            return make_response("", 404, "visitNumber is required")
+        if image_path == "" or image_path is None:
+            return make_response("", 404, "visitNumber is required")
         # 检查文件是否存在
         if not os.path.exists(image_path):
             return make_response("", 404, "File not found")
         # 判断文件是否是 PDF
         if image_path.lower().endswith('.pdf'):
-            image_path = process_pdf(image_path, r'E:\python\flask_deploy\App\img\rendered',
-                                     r'E:\python\flask_deploy\App\img\extracted', dpi=300)
-            print(image_path)
+            now = datetime.now()
+
+            image_path = process_pdf(image_path,
+                                     os.path.join(save_path, "origin", now.strftime('%Y'), now.strftime('%m'), visitNumber, "pdf"),
+                                     os.path.join(save_path, "origin", now.strftime('%Y'), now.strftime('%m'), visitNumber),
+                                     dpi=300)
             # 遍历所有图像路径并进行预测
             result_datas = []
             left_eye_found = False
@@ -77,4 +87,3 @@ class site(Resource):
             else:
                 result = "右眼"
             return make_response(result_data(result, image_path), 200, 'OK')
-

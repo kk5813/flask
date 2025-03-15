@@ -26,9 +26,8 @@ class ZhmPredict0:
         threshold = 0.5
 
         assert os.path.exists(img_path), f"image file {img_path} dose not exists."
-
-        # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        device = torch.device("cpu")
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        # device = torch.device("cpu")
 
         data_transform = transforms.Compose([
             transforms.ToTensor(),

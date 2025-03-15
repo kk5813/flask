@@ -19,7 +19,7 @@ class YyApiSeg(Resource):
         self.logger = logging.getLogger(__name__)
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('imagePath', type=str, required=True, help="Image file Path is required")
-
+        self.parser.add_argument('visitNumber', type=str, required=True, help="Visit Number is required")
     # 自定义缓存键函数，根据请求参数生成唯一的键
 
     @marshal_with(Result)
@@ -30,8 +30,9 @@ class YyApiSeg(Resource):
         args = self.parser.parse_args()
         self.logger.debug(args)
         image_path = args['imagePath']
+        visitNumber = args['visitNumber']
 
-        seg_img_path = YyPredictSeg.predict_segment(image_path)
+        seg_img_path = YyPredictSeg.predict_segment(image_path, visitNumber)
         return make_response(result_data("视盘和视杯分割结果", seg_img_path), 200, 'OK')
 
     """

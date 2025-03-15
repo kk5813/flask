@@ -19,7 +19,7 @@ class ZhmApi3(Resource):
         self.logger = logging.getLogger(__name__)
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('imagePath', type=str, required=True, help="Image file Path is required")
-
+        self.parser.add_argument('visitNumber', type=str, required=True, help="Visit Number is required")
     # 自定义缓存键函数，根据请求参数生成唯一的键
 
     @marshal_with(Result)
@@ -45,10 +45,11 @@ class ZhmApi3(Resource):
         args = self.parser.parse_args()
         self.logger.debug(args)
         image_path = args['imagePath']
+        visitNumber = args['visitNumber']
         image_path_list = [item.strip() for item in image_path.split(",")]
         url = ""  # 初始化 url
         for path in image_path_list:
-            url_detect = ZhmPredict3.lesion_detection(path)
+            url_detect = ZhmPredict3.lesion_detection(path, visitNumber)
             if url:  # 如果 url 已经不为空，说明这是后续的拼接，才加逗号
                 url += "," + url_detect
             else:  # 如果 url 为空，说明是第一次拼接，不加逗号

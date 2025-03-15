@@ -18,7 +18,7 @@ class ZhmApi2(Resource):
         self.logger = logging.getLogger(__name__)
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('imagePath', type=str, required=True, help="Image file Path is required")
-
+        self.parser.add_argument('visitNumber', type=str, required=True, help="Visit Number is required")
     # 自定义缓存键函数，根据请求参数生成唯一的键
 
     @marshal_with(Result)
@@ -29,8 +29,9 @@ class ZhmApi2(Resource):
         args = self.parser.parse_args()
         self.logger.debug(args)
         image_path = args['imagePath']
+        visitNumer = args['visitNumber']
 
-        url = ZhmPredict2.quadrant_division(image_path)
+        url = ZhmPredict2.quadrant_division(image_path, visitNumer)
         if url == "":
             return make_response(result_data("未检测到视盘", url), 200, 'OK')
         else:

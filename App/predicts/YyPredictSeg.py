@@ -5,6 +5,7 @@
 import os
 import time
 import uuid
+from datetime import datetime
 
 import cv2
 import numpy as np
@@ -19,7 +20,7 @@ class YyPredictSeg:
         pass
 
     @staticmethod
-    def predict_segment(img):
+    def predict_segment(img, visitNumber):
         # -------------------------------------------------------------------------  #
         #   如果想要修改对应种类的颜色，到__init__函数里修改self.colors即可
         # -------------------------------------------------------------------------#
@@ -28,9 +29,13 @@ class YyPredictSeg:
         unet = Unet()
         image = Image.open(img)
         r_image = unet.detect_image(image, count=count, name_classes=name_classes)
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
-        path = save_path + str(uuid.uuid1()) + ".jpg"
+        now = datetime.now()
+        image_save_path = os.path.join(save_path, "myopia",
+                                       now.strftime('%Y'), now.strftime('%m')
+                                       , visitNumber)
+        if not os.path.exists(image_save_path):
+            os.makedirs(image_save_path)
+        path = image_save_path + "/" + str(uuid.uuid1()) + ".jpg"
         r_image.save(path)
 
         # r_image.show()
@@ -51,5 +56,5 @@ class YyPredictSeg:
 
 if __name__ == '__main__':
     img = YyPredictSeg.predict_segment(
-        '../img/001752-20191015@100326-L3-S.jpg')
+        '../img/001752-20191015@100326-L3-S.jpg', "MZ1231565")
     print(img)

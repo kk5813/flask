@@ -1,5 +1,6 @@
 import colorsys
 import copy
+import os
 import time
 
 import cv2
@@ -20,13 +21,15 @@ from App.utils.yy_utils import cvtColor, preprocess_input, resize_image, show_co
 #   一定要注意训练时的model_path和num_classes数的修改
 # --------------------------------------------#
 class Unet(object):
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    weights_path = os.path.normpath(os.path.join(script_dir, "../weights/yy_unet_best_epoch_weights.pth"))
     _defaults = {
         # -------------------------------------------------------------------#
         #   model_path指向logs文件夹下的权值文件
         #   训练好后logs文件夹下存在多个权值文件，选择验证集损失较低的即可。
         #   验证集损失较低不代表miou较高，仅代表该权值在验证集上泛化性能较好。
         # -------------------------------------------------------------------#
-        "model_path": '/app/App/weights/yy_unet_best_epoch_weights.pth',
+        "model_path": weights_path,
         # --------------------------------#
         #   所需要区分的类的个数+1
         # --------------------------------#
@@ -90,7 +93,7 @@ class Unet(object):
     def generate(self, onnx=False):
         self.net = unet(num_classes=self.num_classes, backbone=self.backbone)
 
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         self.net.load_state_dict(torch.load(self.model_path, map_location=device))
         self.net = self.net.eval()
         print('{} model, and classes loaded.'.format(self.model_path))

@@ -1,5 +1,6 @@
 import os
 import json
+from datetime import datetime
 
 import torch
 from PIL import Image, ImageDraw
@@ -16,7 +17,7 @@ class ZhmPredict2:
         pass
 
     @staticmethod
-    def quadrant_division(img):
+    def quadrant_division(img, visitNumber):
         img = Image.open(img)
         width, height = img.size
         # read class_indict
@@ -57,22 +58,26 @@ class ZhmPredict2:
                 # quadrant2.show(title="Quadrant 2 (Left-Top)")
                 # quadrant3.show(title="Quadrant 3 (Left-Bottom)")
                 # quadrant4.show(title="Quadrant 4 (Right-Bottom)")
-                if not os.path.exists(save_path):
-                    os.makedirs(save_path)
-                path = save_path + str(uuid.uuid1()) + ".jpg"
+                now = datetime.now()
+                image_save_path = os.path.join(save_path, "dr",
+                                               now.strftime('%Y'), now.strftime('%m')
+                                               , visitNumber)
+                if not os.path.exists(image_save_path):
+                    os.makedirs(image_save_path)
+                path = image_save_path + "/" + str(uuid.uuid1()) + ".jpg"
 
                 quadrant1.save(path)
                 url = path
 
-                path = save_path + str(uuid.uuid1()) + ".jpg"
+                path = image_save_path + "/" + str(uuid.uuid1()) + ".jpg"
                 quadrant2.save(path)
                 url += "," + path
 
-                path = save_path + str(uuid.uuid1()) + ".jpg"
+                path = image_save_path + "/" + str(uuid.uuid1()) + ".jpg"
                 quadrant3.save(path)
                 url += "," + path
 
-                path = save_path + str(uuid.uuid1()) + ".jpg"
+                path = image_save_path + "/" + str(uuid.uuid1()) + ".jpg"
                 quadrant4.save(path)
                 url += "," + path
 
@@ -80,5 +85,5 @@ class ZhmPredict2:
 
 
 if __name__ == '__main__':
-    url = ZhmPredict2.quadrant_division(r"E:\python\flask_deploy\App\img\zhm\bingzao.jpg")
+    url = ZhmPredict2.quadrant_division(r"E:\python\flask_deploy\App\img\zhm\bingzao.jpg","MZ15615651")
     print(url)

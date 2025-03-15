@@ -19,7 +19,7 @@ class YyApiTess(Resource):
         self.logger = logging.getLogger(__name__)
         self.parser = reqparse.RequestParser()
         self.parser.add_argument('imagePath', type=str, required=True, help="Image file Path is required")
-
+        self.parser.add_argument('visitNumber', type=str, required=True, help="Visit Number is required")
     # 自定义缓存键函数，根据请求参数生成唯一的键
 
     @marshal_with(Result)

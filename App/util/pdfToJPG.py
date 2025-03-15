@@ -8,11 +8,12 @@ import os
 import cv2
 import fitz
 import numpy as np
+import uuid  # 导入 uuid 模块
 
 
 def render_pdf_page_as_image(pdf_path, output_folder, dpi=300):
     """
-    将 PDF 的每一页渲染为高分辨率图片。
+    将 PDF 的每一页渲染为高分辨率图片，并使用 UUID 命名。
     :param pdf_path: PDF 文件路径
     :param output_folder: 保存图片的文件夹路径
     :param dpi: 图像分辨率（默认300）
@@ -31,7 +32,10 @@ def render_pdf_page_as_image(pdf_path, output_folder, dpi=300):
 
         # 渲染页面为图片
         pix = page.get_pixmap(matrix=mat, alpha=False)
-        image_path = os.path.join(output_folder, f"page_{page_number + 1}.png")
+
+        # 使用 UUID 生成唯一的文件名
+        unique_filename = str(uuid.uuid4()) + '.png'
+        image_path = os.path.join(output_folder, unique_filename)
         pix.save(image_path)
 
         # print(f"页面 {page_number + 1} 渲染完成：{image_path}，大小：{pix.width}x{pix.height}")
@@ -82,8 +86,11 @@ def extract_and_crop_images(image_path, output_dir):
             # 上面裁剪60px，下面裁剪50px
             cropped_image = cropped_image[85:-50, :]  # 上面裁剪60px，下面裁剪50px，保留整个宽度
 
+            # 使用 UUID 生成唯一的文件名
+            unique_filename = str(uuid.uuid4()) + '.png'
+            output_image_path = os.path.join(output_dir, unique_filename)
+
             # 保存提取的图像
-            output_image_path = os.path.join(output_dir, f'extracted_image_{i + 1}.png')
             cv2.imwrite(output_image_path, cropped_image)
             cropped_image_paths.append(output_image_path)
             # print(f'提取的图像已保存到 {output_image_path}')
