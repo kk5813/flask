@@ -21,7 +21,7 @@ def render_pdf_page_as_image(pdf_path, output_folder, dpi=300):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    pdf_document = fitz.open(pdf_path)
+    pdf_document = fitz.Document(pdf_path)
 
     for page_number in range(len(pdf_document)):
         page = pdf_document[page_number]
