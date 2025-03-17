@@ -56,6 +56,7 @@ class site(Resource):
             return make_response("", 404, "File not found")
         # 判断文件是否是 PDF
         if image_path.lower().endswith('.pdf'):
+            print("PDF测试")
             now = datetime.now()
 
             image_path = process_pdf(image_path,
@@ -81,9 +82,12 @@ class site(Resource):
                     break
             return make_response(result_datas, 200, 'OK')
         else:
+            result_datas = []
+            print("照片测试")
             eye = SitePredict(image_path)  # 假设 SitePredict 返回 0 或 1
             if eye == 0:
                 result = "左眼"
             else:
                 result = "右眼"
-            return make_response(result_data(result, image_path), 200, 'OK')
+            result_datas.append(result_data(result, image_path))
+            return make_response(result_datas, 200, 'OK')
