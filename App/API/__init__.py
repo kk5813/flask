@@ -12,8 +12,8 @@ Result = {
     'msg': fields.String
 }
 
-# save_path = os.path.join("/", "opt", "resources", "images", "diagnose/")
-save_path = r"E:/Download/project/diagnose"
+save_path = os.path.join("/", "opt", "resources", "images", "diagnose/")
+# save_path = r"E:/Download/project/diagnose"
 
 # 返回数据
 def make_response(data, code, msg):
